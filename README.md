@@ -7,7 +7,7 @@ cd uuid-v4-cpp
 mkdir build && cd build
 cmake ..
 cmake --build .
-./uuid-v4-cpp
+./uuid-v4
 ```
 
 # License
