@@ -1,3 +1,4 @@
+#include <array>
 #include <cassert>
 #include <cstdint>
 #include <iomanip>
@@ -9,12 +10,12 @@
 
 class Uuid {
   public:
-    Uuid() {
+    Uuid() : m_bytes() {
         std::mt19937 seed(std::random_device{}());
         std::uniform_int_distribution<uint8_t> dist(0, 255);
 
-        for (int i = 0; i < 16; ++i) {
-            m_bytes[i] = dist(seed);
+        for (auto &byte : m_bytes) {
+            byte = dist(seed);
         }
 
         m_bytes[6] = (m_bytes[6] >> 4) | 0x40;
@@ -56,10 +57,10 @@ class Uuid {
     }
 
   private:
-    uint8_t m_bytes[16];
+    std::array<uint8_t, 16> m_bytes;
 };
 
-int main() {
+auto main() -> int {
     Uuid uuid;
     assert(uuid.is_valid()); // will never fail (hopefully)
 
