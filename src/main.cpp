@@ -26,7 +26,7 @@ class Uuid {
                (m_bytes[8] >> 6) == 2;   // variant 1
     }
 
-    auto to_string() -> std::string {
+    auto to_string() const -> std::string {
         std::stringstream ss;
 
         int i = 0;
@@ -49,6 +49,12 @@ class Uuid {
         return ss.str();
     }
 
+    friend auto operator<<(std::ostream &os, const Uuid &uuid)
+        -> std::ostream & {
+        os << uuid.to_string();
+        return os;
+    }
+
   private:
     uint8_t m_bytes[16];
 };
@@ -57,7 +63,7 @@ int main() {
     Uuid uuid;
     assert(uuid.is_valid()); // will never fail (hopefully)
 
-    std::cout << uuid.to_string() << std::endl;
+    std::cout << uuid << std::endl;
 
     return 0;
 }
