@@ -8,6 +8,7 @@ mkdir build && cd build
 cmake ..
 cmake --build .
 ./uuid-v4
+483f1367-90eb-4a62-b826-0ab298b72577
 ```
 
 # License
