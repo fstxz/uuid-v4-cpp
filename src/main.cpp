@@ -1,0 +1,63 @@
+#include <cassert>
+#include <cstdint>
+#include <iomanip>
+#include <ios>
+#include <iostream>
+#include <random>
+#include <sstream>
+#include <string>
+
+class Uuid {
+  public:
+    Uuid() {
+        std::mt19937 seed(std::random_device{}());
+        std::uniform_int_distribution<uint8_t> dist(0, 255);
+
+        for (int i = 0; i < 16; ++i) {
+            m_bytes[i] = dist(seed);
+        }
+
+        m_bytes[6] = (m_bytes[6] >> 4) | 0x40;
+        m_bytes[8] = (m_bytes[8] >> 2) | 0x80;
+    }
+
+    auto is_valid() -> bool {
+        return (m_bytes[6] >> 4) == 4 && // version 4
+               (m_bytes[8] >> 6) == 2;   // variant 1
+    }
+
+    auto to_string() -> std::string {
+        std::stringstream ss;
+
+        int i = 0;
+        for (const auto &byte : m_bytes) {
+            ss << std::hex << std::setfill('0') << std::setw(2)
+               << static_cast<int>(byte);
+
+            switch (i) {
+            case 3:
+            case 5:
+            case 7:
+            case 9:
+                ss << "-";
+                break;
+            }
+
+            ++i;
+        }
+
+        return ss.str();
+    }
+
+  private:
+    uint8_t m_bytes[16];
+};
+
+int main() {
+    Uuid uuid;
+    assert(uuid.is_valid()); // will never fail (hopefully)
+
+    std::cout << uuid.to_string() << std::endl;
+
+    return 0;
+}
