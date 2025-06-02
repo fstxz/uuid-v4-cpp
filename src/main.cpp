@@ -11,7 +11,7 @@
 class Uuid {
   public:
     Uuid() : m_bytes() {
-        std::mt19937 seed(std::random_device{}());
+        std::random_device seed;
         std::uniform_int_distribution<uint8_t> dist(0, 255);
 
         for (auto &byte : m_bytes) {
